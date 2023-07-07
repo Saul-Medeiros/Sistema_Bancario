@@ -41,7 +41,7 @@ while True:
                     f'\nValor de saque máximo permitido: R$ {LIMITE:.2f}')
         
         elif excedeu_saques:
-            print(colored('\nOperação falhou! Número máximo de saques excedido!', 'orange'))
+            print(colored('\nOperação falhou! Número máximo de saques excedido!', 'red'))
         
         elif excedeu_saldo:
             print(colored('Saldo Insuficiente!', 'red') +
