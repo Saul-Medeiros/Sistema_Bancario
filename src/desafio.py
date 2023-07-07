@@ -1,8 +1,7 @@
 from termcolor import colored
-from time import sleep
 
 menu = colored('''
-======== Sistema Bancário ========
+=========== Sistema Bancário ===========
 
 [1] Depositar
 [2] Sacar
@@ -15,69 +14,61 @@ saldo = 0
 LIMITE = 500
 numero_saques = 0
 LIMITE_SAQUES = 3
-lista_deposito = list()
-lista_saques = list()
+extrato = ''
 
 while True:
     opcao = int(input(menu))
     print()
     
     if opcao == 1:
-        print(colored(' DEPÓSITO '.center(20, '-'), 'cyan', attrs=['bold']))
         deposito = float(input('Informe o valor que deseja depositar: '))
-        lista_deposito.append(deposito)
-        saldo += deposito
-        sleep(2)
-        print(colored('\nDepósito realizado com sucesso!', 'green'))
+        if deposito > 0:
+            extrato += f'Depósito: R$ {deposito:.2f}\n'
+            saldo += deposito
+            print(colored('\nDepósito realizado com sucesso!', 'green'))
+        else:
+            print(colored('Operação falhou! O valor informado é inválido.', 'red'))
 
     elif opcao == 2:
-        print(colored(' SAQUE '.center(20, '-'), 'cyan', attrs=['bold']))
-        if numero_saques < LIMITE_SAQUES:
-            valor_saque = float(input('Informe o valor que deseja sacar: '))
-            print()
-            if valor_saque <= LIMITE:
-                if valor_saque <= saldo:
-                    lista_saques.append(valor_saque)
-                    saldo -= valor_saque
-                    numero_saques += 1
-                    sleep(2)
-                    print(colored('Saque realizado com sucesso!\n', 'green') +
-                          f'\nValor sacado: R$ {valor_saque:.2f}' +
-                          '\nRetire o valor na boca do caixa!')
-                else:
-                    print(colored('Saldo Insuficiente!', 'red') +
-                        f'\nValor disponível na conta: R$ {saldo:.2f}')
-            else:
-                print(colored('Saque negado!\n', 'red') +
-                        f'\nValor de saque máximo permitido: R$ {LIMITE:.2f}')
+        valor = float(input('Informe o valor que deseja sacar: '))
+        
+        excedeu_saques = numero_saques >= LIMITE_SAQUES
+        excedeu_limite = valor > LIMITE
+        excedeu_saldo = valor > saldo
+        
+        if excedeu_limite:
+            print(colored('\nSaque negado!', 'red') +
+                    f'\nValor de saque máximo permitido: R$ {LIMITE:.2f}')
+        
+        elif excedeu_saques:
+            print(colored('\nOperação falhou! Número máximo de saques excedido!', 'orange'))
+        
+        elif excedeu_saldo:
+            print(colored('Saldo Insuficiente!', 'red') +
+                f'\nValor disponível na conta: R$ {saldo:.2f}')
+        
+        elif valor > 0:
+            extrato += f'Saque: R$ {valor:.2f}\n'
+            saldo -= valor
+            numero_saques += 1
+            print(colored('Saque realizado com sucesso!\n', 'green') +
+                f'\nValor sacado: R$ {valor:.2f}')
+        
         else:
-            print(colored('\nMáximo de saques diários efetuados!' +
-                  '\nVolte outro dia e tente novamente.', 'orange'))
-            sleep(2)
+            print(colored('Operação falhou! O valor informado é inválido.', 'red'))
 
     elif opcao == 3:
-        print(colored(' EXTRATO '.center(20, '-'), 'cyan', attrs=['bold']))
-        
-        if lista_deposito or lista_saques:
-            print(colored('Depósitos realizados:', 'green'))
-            for i, deposito in enumerate(lista_deposito):
-                print(f'{i + 1}º depósito: R${deposito:.2f}')
-            print(colored(f'Valor total depositado: R${sum(lista_deposito):.2f}', 'green'))
-            
-            print(colored('\nSaques realizados:', 'magenta'))
-            for i, saque in enumerate(lista_saques):
-                print(f'{i + 1}º saque: R$ {saque:.2f}')
-            print(colored(f'Valor total sacado: R$ {sum(lista_saques):.2f}', 'magenta'))
-        else:
-            print('Não foram realizadas movimentações.')
-        
-        print(f'\nSaldo atual da conta: R$ {saldo:.2f}')
+        print(colored('----------- EXTRATO -----------', 'cyan', attrs=['bold']),
+              colored(('Não foram realizadas movimentações.\n' if not extrato else extrato), 'magenta'),
+              colored(f'Saldo: R$ {saldo:.2f}', 'green'),
+              colored('-------------------------------', 'cyan', attrs=['bold']), sep='\n')
 
     elif opcao == 0:
         print(colored('Obrigado por utilizar o nosso sistema.\n' +
               'Tenha um excelente dia!\n', 'yellow') +
-              colored('==================================\n', 'yellow', attrs=['bold']))
+              colored(('=' * 40), 'yellow', attrs=['bold']) +
+              '\n')
         break
 
     else:
-        print('Operação inválida, por favor selecione novamente a operação desejada.')
+        print(colored('Operação inválida, por favor selecione novamente a operação desejada.', 'red'))
