@@ -2,13 +2,13 @@ def menu():
     menu = ('\n\n=========== Sistema Bancário ===========\n' +
             '\n[1]\tDepositar' +
             '\n[2]\tSacar' +
-            '\n[3]\tExtrato' +
-            '\n[4]\tNova conta' +
-            '\n[5]\tListar contas' +
-            '\n[6]\tNovo usuário' +
-            '\n[7]\tListar usuários' +
-            '\n[8]\tExcluir conta' +
-            '\n[9]\tExcluir usuário'
+            '\n[3]\tExibir Extrato' +
+            '\n[4]\tNova Conta' +
+            '\n[5]\tListar Contas' +
+            '\n[6]\tExcluir Conta' +
+            '\n[7]\tNovo Usuário' +
+            '\n[8]\tListar Usuários' +
+            '\n[9]\tExcluir Usuário'
             '\n[0]\tSair\n' +
             '\n=> ')
     return int(input(menu))
@@ -189,6 +189,7 @@ def main():
                 numero_saques=numero_saques,
                 limite_saques=LIMITE_SAQUES
             )
+            
         elif opcao == 3:
             exibir_extrato(saldo, extrato=extrato)
         
@@ -203,13 +204,13 @@ def main():
             listar_contas(contas)
         
         elif opcao == 6:
-            criar_usuario(usuarios)
+            excluir_conta(contas)
         
         elif opcao == 7:
-            listar_usuarios(usuarios)
+            criar_usuario(usuarios)
         
         elif opcao == 8:
-            excluir_conta(contas)
+            listar_usuarios(usuarios)
         
         elif opcao == 9:
             excluir_usuario(usuarios, contas)
